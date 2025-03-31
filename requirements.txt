@@ -4,3 +4,10 @@ numpy>=1.24.0
 pillow>=10.0.0
 opencv-python>=4.8.0
 mss>=9.0.0
+
+# Additional instructions to resolve pyaudio installation error
+# Please install the portaudio library before installing pyaudio
+# On Ubuntu/Debian:
+# sudo apt-get install portaudio19-dev
+# On macOS:
+# brew install portaudio
