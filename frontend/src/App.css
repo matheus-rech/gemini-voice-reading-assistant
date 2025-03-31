@@ -1,0 +1,86 @@
+.App {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.app-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.app-title {
+  color: #4285F4;
+  margin-bottom: 10px;
+}
+
+.app-subtitle {
+  color: #5f6368;
+  font-weight: normal;
+}
+
+.main-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.video-chat-container {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.video-container {
+  flex: 1;
+  min-width: 320px;
+}
+
+.chat-container {
+  flex: 1;
+  min-width: 320px;
+  display: flex;
+  flex-direction: column;
+}
+
+.control-panel {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.mode-selector {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.mode-button {
+  padding: 8px 16px;
+  background-color: white;
+  border: 1px solid #dadce0;
+  border-radius: 24px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #5f6368;
+  transition: all 0.3s;
+}
+
+.mode-button.active {
+  background-color: #e8f0fe;
+  color: #1a73e8;
+  border-color: #1a73e8;
+}
+
+.mode-button:hover {
+  background-color: #f1f3f4;
+}
+
+@media (max-width: 768px) {
+  .video-chat-container {
+    flex-direction: column;
+  }
+}
