@@ -27,6 +27,7 @@ function App() {
   const [messages, setMessages] = useState([]);
   const [isRecording, setIsRecording] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
+  const [connectionStatus, setConnectionStatus] = useState('Disconnected');
   const audioQueueRef = useRef([]);
   const isPlayingRef = useRef(false);
   const audioContextRef = useRef(null);
@@ -35,7 +36,7 @@ function App() {
   useEffect(() => {
     // Set up WebSocket event handlers
     webSocketService.setMessageHandler(handleReceiveMessage);
-    webSocketService.setStatusChangeHandler(setIsConnected);
+    webSocketService.setStatusChangeHandler(handleStatusChange);
     
     // Connect to WebSocket server
     webSocketService.connect();
@@ -77,6 +78,12 @@ function App() {
     }
   };
 
+  // Handle status changes
+  const handleStatusChange = (status) => {
+    setIsConnected(status);
+    setConnectionStatus(status ? 'Connected' : 'Disconnected');
+  };
+
   // Send a text message
   const handleSendMessage = (text) => {
     // Add message to local state
@@ -92,6 +99,11 @@ function App() {
   // Toggle microphone recording
   const handleToggleRecording = () => {
     setIsRecording(prev => !prev);
+  };
+
+  // Manually trigger reconnection attempt
+  const handleReconnect = () => {
+    webSocketService.connect();
   };
 
   // Play audio data received from the server
@@ -229,8 +241,13 @@ function App() {
             onToggleRecording={handleToggleRecording}
           />
           <div style={{ color: isConnected ? '#34A853' : '#EA4335', margin: '10px' }}>
-            {isConnected ? 'Connected' : 'Disconnected'}
+            {connectionStatus}
           </div>
+          {!isConnected && (
+            <button onClick={handleReconnect} style={{ padding: '10px', borderRadius: '24px', backgroundColor: '#4285F4', color: 'white', border: 'none', cursor: 'pointer' }}>
+              Reconnect
+            </button>
+          )}
         </div>
       </div>
       
