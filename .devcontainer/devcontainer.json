@@ -1,6 +1,23 @@
 {
-  "tasks": {
-    "build": "pip install -r requirements.txt",
-    "launch": "pip install -r requirements.txt && export GEMINI_API_KEY=AIzaSyCvzNdKuns0rLXXLwYSL2Chn7W69YDV3cE && python main.py --mode camera && cd frontend && npm install && npm start"
-  }
+  "name": "Gemini Voice Reading Assistant Dev Container",
+  "image": "mcr.microsoft.com/devcontainers/python:3.10",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "lts"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "dbaeumer.vscode-eslint"
+      ]
+    }
+  },
+  "postCreateCommand": "pip install -r requirements.txt && cd frontend && npm install",
+  "settings": {
+    "terminal.integrated.defaultProfile.linux": "bash"
+  },
+  "forwardPorts": [3000, 8000],
+  "remoteUser": "vscode"
 }
