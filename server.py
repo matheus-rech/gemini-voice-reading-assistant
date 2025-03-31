@@ -31,6 +31,7 @@ class WebSocketAudioLoop(AudioLoop):
         super().__init__(video_mode=video_mode)
         self.websocket = websocket
         self.message_queue = asyncio.Queue()
+        self.token = None  # Token for authentication
     
     # Override methods to work with WebSocket
     async def send_response(self, text):

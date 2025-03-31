@@ -61,13 +61,17 @@ class AudioLoop:
         self.video_mode = video_mode
         self.running = True
         self.p = pyaudio.PyAudio()
-        self.audio_stream = self.p.open(
-            format=FORMAT,
-            channels=CHANNELS,
-            rate=SEND_SAMPLE_RATE,
-            input=True,
-            frames_per_buffer=CHUNK_SIZE,
-        )
+        try:
+            self.audio_stream = self.p.open(
+                format=FORMAT,
+                channels=CHANNELS,
+                rate=SEND_SAMPLE_RATE,
+                input=True,
+                frames_per_buffer=CHUNK_SIZE,
+            )
+        except OSError as e:
+            print(f"Error initializing audio stream: {e}")
+            self.audio_stream = None
         self.session = None
         self.audio_latencies: List[float] = []
         self.capture_interval = DEFAULT_CAPTURE_INTERVAL
@@ -234,7 +238,7 @@ class AudioLoop:
                     f"capture_interval: {self.capture_interval:.2f}s\n"
                 )
                 # If avg latency is high, increase capture interval
-                if avg_latency > 0.7:
+                if (avg_latency > 0.7):
                     self.capture_interval = min(
                         CAPTURE_INTERVAL_MAX, self.capture_interval * 1.2
                     )

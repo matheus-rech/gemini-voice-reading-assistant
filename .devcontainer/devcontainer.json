@@ -1,0 +1,6 @@
+{
+  "tasks": {
+    "build": "pip install -r requirements.txt",
+    "launch": "pip install -r requirements.txt && export GEMINI_API_KEY=AIzaSyCvzNdKuns0rLXXLwYSL2Chn7W69YDV3cE && python main.py --mode camera && cd frontend && npm install && npm start"
+  }
+}
