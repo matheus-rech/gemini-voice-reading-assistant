@@ -7,6 +7,9 @@ class WebSocketService {
     this.reconnectAttempts = 0;
     this.maxReconnectAttempts = 5;
     this.reconnectTimeout = null;
+    this.pollingInterval = 5000; // 5 seconds
+    this.pollingTimeout = null;
+    this.token = null; // Token for authentication
   }
 
   connect() {
@@ -63,12 +66,17 @@ class WebSocketService {
     // Attempt to reconnect if not explicitly closed by the client
     if (event.code !== 1000) {
       this.scheduleReconnect();
+    } else {
+      // Switch to HTTP polling as a fallback
+      this.startPolling();
     }
   }
 
   handleError(error) {
     console.error('WebSocket error:', error);
     // The WebSocket will attempt to reconnect automatically on error
+    this.logError(error);
+    this.displayUserFriendlyError(error);
   }
 
   handleMessage(event) {
@@ -102,6 +110,40 @@ class WebSocketService {
       }, delay);
     } else {
       console.error('Maximum reconnect attempts reached');
+      // Switch to HTTP polling as a fallback
+      this.startPolling();
+    }
+  }
+
+  startPolling() {
+    console.log('Starting HTTP polling as fallback');
+    this.pollingTimeout = setInterval(() => {
+      this.pollServer();
+    }, this.pollingInterval);
+  }
+
+  stopPolling() {
+    if (this.pollingTimeout) {
+      clearInterval(this.pollingTimeout);
+      this.pollingTimeout = null;
+    }
+  }
+
+  async pollServer() {
+    try {
+      const response = await fetch('/api/poll', {
+        headers: {
+          'Authorization': `Bearer ${this.token}`
+        }
+      });
+      const data = await response.json();
+      console.log('Received polling data:', data);
+      
+      if (this.messageHandler) {
+        this.messageHandler(data);
+      }
+    } catch (error) {
+      console.error('Error during HTTP polling:', error);
     }
   }
 
@@ -141,10 +183,19 @@ class WebSocketService {
     this.statusChangeHandler = handler;
   }
 
+  setToken(token) {
+    this.token = token;
+  }
+
   disconnect() {
     if (this.reconnectTimeout) {
       clearTimeout(this.reconnectTimeout);
       this.reconnectTimeout = null;
+    }
+
+    if (this.pollingTimeout) {
+      clearInterval(this.pollingTimeout);
+      this.pollingTimeout = null;
     }
 
     if (this.socket) {
@@ -153,6 +204,16 @@ class WebSocketService {
     }
     
     this.isConnected = false;
+  }
+
+  logError(error) {
+    // Implement detailed error logging
+    console.error('Detailed WebSocket error:', error);
+  }
+
+  displayUserFriendlyError(error) {
+    // Implement user-friendly error messages
+    alert('An error occurred with the WebSocket connection. Please try again later.');
   }
 }
 

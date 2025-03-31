@@ -9,6 +9,11 @@ An interactive voice assistant powered by Google's Gemini AI that can see and re
 - Text input support
 - Automatic performance monitoring and adjustment
 - Voice responses from the AI
+- Detailed error logging and user-friendly error messages
+- Exponential backoff for WebSocket reconnection attempts
+- Fallback mechanisms to switch to HTTP polling when WebSocket connection is unavailable
+- Token-based authentication for WebSocket and HTTP polling requests
+- Clear feedback to the user about connection status and limitations in functionality
 
 ## Project Structure
 
